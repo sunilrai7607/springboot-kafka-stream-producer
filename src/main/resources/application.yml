@@ -1,0 +1,23 @@
+spring:
+  cloud:
+    stream:
+      default-binder: kafka
+      kafka:
+        binder:
+          auto-add-partitions: true
+          configuration:
+            key.serializer: org.apache.kafka.common.serialization.StringSerializer
+            value.serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+            key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value.deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+          broker:
+            - kafka-broker:7092
+      bindings:
+        output:
+          producer:
+            partition-key-expression: headers['partitionKey']
+            partition-count: 2 # number of partition
+          binder: kafka
+          destination: taxi-booking
+          group: output-group-1
+          content-type: text/plain
